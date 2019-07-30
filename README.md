@@ -20,9 +20,9 @@ Stick to the original unless you find yourself in similar situation as described
 
 Installation
 ------------
-1. Install using `pip install https://github.com/sonicblind/django-py3-ldap/archive/master.zip`.
-2. Add ``'django_py3_ldap'`` to your `INSTALLED_APPS` setting.
-3. Set (or add) your `AUTHENTICATION_BACKENDS` setting to ``("django_py3_ldap.auth.LDAPBackend",)``
+1. Install using `pipenv install -e git+https://github.com/sonicblind/django-py3-ldap.git#egg=django-py3-ldap`.
+2. Add `'django_py3_ldap'` to your `INSTALLED_APPS` setting.
+3. Set (or add) your `AUTHENTICATION_BACKENDS` setting to `("django_py3_ldap.auth.LDAPBackend",)`
 4. Configure the settings for your LDAP server (see Available settings, below).
 
 
@@ -47,7 +47,7 @@ Config attributes `LDAP_ADMIN_DN` and `LDAP_ADMIN_PASSWORD` must be defined.
 
 ##### Not supported features
 Some of the original functionality is not available, this includes:
-- management commands (``ldap_sync_users``, ``ldap_promote``)
+- management commands (`ldap_sync_users`, `ldap_promote`)
 - Microsoft Active Directory support
 - installation using pip
 - not tested with Python 2
@@ -67,7 +67,7 @@ If the search is successful (the user exists in LDAP), application attempts
 to re-bind with learned DN and password provided by user.
 
 If the rebind is successful (user is authenticated), the user details are saved
-in a local Django ``User`` model.  
+in a local Django `User` model.  
 The local model is only created once,
 and the details will be kept updated with the LDAP record details on every login.
 
