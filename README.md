@@ -20,6 +20,11 @@ Stick to the original unless you find yourself in similar situation as described
 
 Installation
 ------------
+1. Install using `pip install https://github.com/sonicblind/django-py3-ldap/archive/master.zip`.
+2. Add ``'django_py3_ldap'`` to your `INSTALLED_APPS` setting.
+3. Set (or add) your `AUTHENTICATION_BACKENDS` setting to ``("django_py3_ldap.auth.LDAPBackend",)``
+4. Configure the settings for your LDAP server (see Available settings, below).
+
 
 ##### New functionality
 
