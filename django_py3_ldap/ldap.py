@@ -60,6 +60,31 @@ class Connection(object):
             logger.warning(f"LDAP rebind failed: {ex}")
             return None
 
+    def iter_users(self):
+        """
+        Returns an iterator of Django users that correspond to
+        users in the LDAP database.
+        """
+        try:
+            paged_entries = self._connection.extend.standard.paged_search(
+                search_base=settings.LDAP_USER_SEARCH_BASE,
+                search_filter=format_search_filter({}),
+                search_scope=ldap3.SUBTREE,
+                attributes=ldap3.ALL_ATTRIBUTES,
+                get_operational_attributes=True,
+                paged_size=30,
+            )
+            return filter(None, (
+                self._get_or_create_user(entry["attributes"])
+                for entry
+                in paged_entries
+                if entry["type"] == "searchResEntry"
+            ))
+        except KeyError as ke:
+            logger.warning(f"LDAP iter_users failed: {ke}")
+        except LDAPException as ex:
+            logger.warning(f"LDAP paged search failed: {ex}")
+
     def _get_or_create_user(self, attributes):
         """
         Returns a Django user for the given LDAP user data.
