@@ -25,7 +25,7 @@ class Connection(object):
         # Search the LDAP database
         try:
             self._connection.search(
-                search_base=settings.LDAP_USER_SEARCH_BASE,
+                search_base=settings.LDAP_AUTH_USER_SEARCH_BASE,
                 search_filter=format_search_filter(kwargs),
                 search_scope=ldap3.SUBTREE,
                 attributes=ldap3.ALL_ATTRIBUTES,
@@ -67,7 +67,7 @@ class Connection(object):
         """
         try:
             paged_entries = self._connection.extend.standard.paged_search(
-                search_base=settings.LDAP_USER_SEARCH_BASE,
+                search_base=settings.LDAP_AUTH_USER_SEARCH_BASE,
                 search_filter=format_search_filter({}),
                 search_scope=ldap3.SUBTREE,
                 attributes=ldap3.ALL_ATTRIBUTES,
@@ -104,17 +104,18 @@ class Connection(object):
                 attributes[attribute_name]
             )
             for field_name, attribute_name
-            in settings.LDAP_USER_FIELDS.items()
+            in settings.LDAP_AUTH_USER_FIELDS.items()
             if attribute_name in attributes
         }
-        user_fields = import_func(settings.LDAP_CLEAN_USER_DATA)(user_fields)
+        user_fields = import_func(
+            settings.LDAP_AUTH_CLEAN_USER_DATA)(user_fields)
         # user_fields: {'username':'value', 'first_name':'value', ...}
 
         # Create the user lookup
         user_lookup = {
             field_name: user_fields.pop(field_name, "")
             for field_name
-            in settings.LDAP_USER_LOOKUP_FIELDS
+            in settings.LDAP_AUTH_USER_LOOKUP_FIELDS
         }
         # user_lookup: {'username':'value'}
         # user_fields: {'first_name':'value', ...}
@@ -132,7 +133,7 @@ class Connection(object):
             user.save()
 
         # Update relations
-        import_func(settings.LDAP_SYNC_USER_RELATIONS)(user, attributes)
+        import_func(settings.LDAP_AUTH_SYNC_USER_RELATIONS)(user, attributes)
 
         return user
 
@@ -143,7 +144,7 @@ def connection():
     Creates and yields admin-priviledged connection to the LDAP server.
     """
     # Configure the connection.
-    if settings.LDAP_USE_TLS:
+    if settings.LDAP_AUTH_USE_TLS:
         auto_bind = ldap3.AUTO_BIND_TLS_BEFORE_BIND
     else:
         auto_bind = ldap3.AUTO_BIND_NO_TLS
@@ -152,16 +153,16 @@ def connection():
     try:
         c = ldap3.Connection(
             ldap3.Server(
-                settings.LDAP_URL,
+                settings.LDAP_AUTH_URL,
                 allowed_referral_hosts=[("*", True)],
                 get_info=ldap3.NONE,
-                connect_timeout=settings.LDAP_CONNECT_TIMEOUT,
+                connect_timeout=settings.LDAP_AUTH_CONNECT_TIMEOUT,
             ),
-            user=settings.LDAP_ADMIN_DN,
-            password=settings.LDAP_ADMIN_PASSWORD,
+            user=settings.LDAP_AUTH_ADMIN_DN,
+            password=settings.LDAP_AUTH_ADMIN_PASSWORD,
             auto_bind=auto_bind,
             raise_exceptions=True,
-            receive_timeout=settings.LDAP_RECEIVE_TIMEOUT,
+            receive_timeout=settings.LDAP_AUTH_RECEIVE_TIMEOUT,
         )
     except LDAPException as ex:
         logger.warning(f"LDAP admin bind failed: {ex}")
@@ -184,7 +185,8 @@ def authenticate(*args, **kwargs):
     # Check validity of login data.
     password = kwargs.pop("password")
     if not password or \
-            frozenset(kwargs) != frozenset(settings.LDAP_USER_LOOKUP_FIELDS):
+            frozenset(kwargs) != frozenset(
+                settings.LDAP_AUTH_USER_LOOKUP_FIELDS):
         return None
 
     # Connect to LDAP Server with admin-priviledged account
