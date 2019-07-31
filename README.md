@@ -24,12 +24,14 @@ Installation
 2. Add `'django_py3_ldap'` to your `INSTALLED_APPS` setting.
 3. Set (or add) your `AUTHENTICATION_BACKENDS` setting to `("django_py3_ldap.auth.LDAPBackend",)`
 4. Configure the settings for your LDAP server (see Available settings, below).
+5. Optionally, run ./manage.py ldap_sync_users to perform an initial sync of LDAP users.
+6. Optionally, run ./manage.py ldap_promote <username> to grant superuser admin access to a given user.
 
 
 ##### New functionality
 
 - DN Format:  
-  - Some LDAP servers might require DN in format `CN=Name Lastname,OU=people,DC=example,DC=com`.
+  - Some LDAP servers might require DN in format `CN=Name Surname,OU=people,DC=example,DC=com`.
 For such LDAP configuration `django-python3-ldap` fails to authenticate user if 
 username is provided instead of full name.
   - With `django-py3-ldap`, it does not matter what DN format the LDAP server is using. 
@@ -41,16 +43,14 @@ is then used to re-bind to authenticate the user.
 
 - Admin account required:
   - Because of the above point, a predefined account with admin privileges is required.
-Config attributes `LDAP_ADMIN_DN` and `LDAP_ADMIN_PASSWORD` must be defined.  
+Config attributes `LDAP_AUTH_ADMIN_DN` and `LDAP_AUTH_ADMIN_PASSWORD` must be defined.  
   
 
 
 ##### Not supported features
 Some of the original functionality is not available, this includes:
-- management commands (`ldap_sync_users`, `ldap_promote`)
 - Microsoft Active Directory support
 - installation using pip
-- not tested with Python 2
 
 
 How it works
@@ -79,21 +79,21 @@ Change their default values and add them to your `settings.py` file.
 
 ```python
 # The URL of the LDAP server.
-LDAP_URL = "ldap://localhost:389"
+LDAP_AUTH_URL = "ldap://localhost:389"
 
 # Initiate TLS on connection.
-LDAP_USE_TLS = False
+LDAP_AUTH_USE_TLS = False
 
 # LDAP account with admin privileges, allowed to search LDAP DB
-LDAP_ADMIN_DN = None
-LDAP_ADMIN_PASSWORD = None
+LDAP_AUTH_ADMIN_DN = None
+LDAP_AUTH_ADMIN_PASSWORD = None
 
 # LDAP timeouts in seconds
-LDAP_CONNECT_TIMEOUT = None
-LDAP_RECEIVE_TIMEOUT = None
+LDAP_AUTH_CONNECT_TIMEOUT = None
+LDAP_AUTH_RECEIVE_TIMEOUT = None
 
 # User model fields mapped to the LDAP attributes that represent them.
-LDAP_USER_FIELDS = {
+LDAP_AUTH_USER_FIELDS = {
     "username": "sAMAccountName",
     "first_name": "givenName",
     "last_name": "sn",
@@ -101,22 +101,22 @@ LDAP_USER_FIELDS = {
 }
 
 # A tuple of Django model fields used to uniquely identify a user.
-LDAP_USER_LOOKUP_FIELDS = ('username',)
+LDAP_AUTH_USER_LOOKUP_FIELDS = ('username',)
 
 # The LDAP search base for looking up users.
-LDAP_USER_SEARCH_BASE = "ou=people,dc=example,dc=com"
+LDAP_AUTH_USER_SEARCH_BASE = "ou=people,dc=example,dc=com"
 
 # The LDAP class that represents a user.
-LDAP_USER_OBJECT_CLASS = "person"
+LDAP_AUTH_USER_OBJECT_CLASS = "person"
 
 # Path to a callable which returns final search filter.
-LDAP_FORMAT_SEARCH_FILTERS = "django_py3_ldap.utils.format_search_filters"
+LDAP_AUTH_FORMAT_SEARCH_FILTERS = "django_py3_ldap.utils.format_search_filters"
 
 # Use this callable to customize how LDAP data is saved to the User model.
-LDAP_CLEAN_USER_DATA = "django_py3_ldap.utils.clean_user_data"
+LDAP_AUTH_CLEAN_USER_DATA = "django_py3_ldap.utils.clean_user_data"
 
 # Use this callable to update user relations.
-LDAP_SYNC_USER_RELATIONS = "django_py3_ldap.utils.sync_user_relations"
+LDAP_AUTH_SYNC_USER_RELATIONS = "django_py3_ldap.utils.sync_user_relations"
 ```
 
 

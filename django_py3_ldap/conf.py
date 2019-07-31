@@ -22,48 +22,48 @@ class LazySettings(object):
     def __init__(self, settings):
         self._settings = settings
 
-    LDAP_URL = LazySetting(
-        name="LDAP_URL",
+    LDAP_AUTH_URL = LazySetting(
+        name="LDAP_AUTH_URL",
         default="ldap://localhost:389",
     )
 
-    LDAP_USE_TLS = LazySetting(
-        name="LDAP_USE_TLS",
+    LDAP_AUTH_USE_TLS = LazySetting(
+        name="LDAP_AUTH_USE_TLS",
         default=False,
     )
 
-    LDAP_ADMIN_DN = LazySetting(
-        name="LDAP_ADMIN_DN",
+    LDAP_AUTH_ADMIN_DN = LazySetting(
+        name="LDAP_AUTH_ADMIN_DN",
         default=None,
     )
 
-    LDAP_ADMIN_PASSWORD = LazySetting(
-        name="LDAP_ADMIN_PASSWORD",
+    LDAP_AUTH_ADMIN_PASSWORD = LazySetting(
+        name="LDAP_AUTH_ADMIN_PASSWORD",
         default=None,
     )
 
-    LDAP_CONNECT_TIMEOUT = LazySetting(
-        name="LDAP_CONNECT_TIMEOUT",
+    LDAP_AUTH_CONNECT_TIMEOUT = LazySetting(
+        name="LDAP_AUTH_CONNECT_TIMEOUT",
         default=None
     )
 
-    LDAP_RECEIVE_TIMEOUT = LazySetting(
-        name="LDAP_RECEIVE_TIMEOUT",
+    LDAP_AUTH_RECEIVE_TIMEOUT = LazySetting(
+        name="LDAP_AUTH_RECEIVE_TIMEOUT",
         default=None
     )
 
-    LDAP_USER_SEARCH_BASE = LazySetting(
-        name="LDAP_USER_SEARCH_BASE",
+    LDAP_AUTH_USER_SEARCH_BASE = LazySetting(
+        name="LDAP_AUTH_USER_SEARCH_BASE",
         default="ou=people,dc=example,dc=com",
     )
 
-    LDAP_USER_OBJECT_CLASS = LazySetting(
-        name="LDAP_USER_OBJECT_CLASS",
+    LDAP_AUTH_USER_OBJECT_CLASS = LazySetting(
+        name="LDAP_AUTH_USER_OBJECT_CLASS",
         default="inetOrgPerson",
     )
 
-    LDAP_USER_FIELDS = LazySetting(
-        name="LDAP_USER_FIELDS",
+    LDAP_AUTH_USER_FIELDS = LazySetting(
+        name="LDAP_AUTH_USER_FIELDS",
         default={
             "username": "sAMAccountName",
             "first_name": "givenName",
@@ -72,26 +72,36 @@ class LazySettings(object):
         },
     )
 
-    LDAP_USER_LOOKUP_FIELDS = LazySetting(
-        name="LDAP_USER_LOOKUP_FIELDS",
+    LDAP_AUTH_USER_LOOKUP_FIELDS = LazySetting(
+        name="LDAP_AUTH_USER_LOOKUP_FIELDS",
         default=(
             "username",
         ),
     )
 
-    LDAP_FORMAT_SEARCH_FILTERS = LazySetting(
-        name="LDAP_FORMAT_SEARCH_FILTERS",
+    LDAP_AUTH_FORMAT_SEARCH_FILTERS = LazySetting(
+        name="LDAP_AUTH_FORMAT_SEARCH_FILTERS",
         default="django_py3_ldap.utils.format_search_filters",
     )
 
-    LDAP_CLEAN_USER_DATA = LazySetting(
-        name="LDAP_CLEAN_USER_DATA",
+    LDAP_AUTH_CLEAN_USER_DATA = LazySetting(
+        name="LDAP_AUTH_CLEAN_USER_DATA",
         default="django_py3_ldap.utils.clean_user_data",
     )
 
-    LDAP_SYNC_USER_RELATIONS = LazySetting(
-        name="LDAP_SYNC_USER_RELATIONS",
+    LDAP_AUTH_SYNC_USER_RELATIONS = LazySetting(
+        name="LDAP_AUTH_SYNC_USER_RELATIONS",
         default="django_py3_ldap.utils.sync_user_relations",
+    )
+
+    LDAP_AUTH_TEST_USER_USERNAME = LazySetting(
+        name="LDAP_AUTH_TEST_USER_USERNAME",
+        default="",
+    )
+
+    LDAP_AUTH_TEST_USER_PASSWORD = LazySetting(
+        name="LDAP_AUTH_TEST_USER_PASSWORD",
+        default="",
     )
 
 

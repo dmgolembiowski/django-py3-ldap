@@ -33,7 +33,7 @@ def convert_model_fields_to_ldap_fields(model_fields):
     Converts a set of model fields into a set of corresponding LDAP fields.
     """
     return {
-        settings.LDAP_USER_FIELDS[field_name]: field_value
+        settings.LDAP_AUTH_USER_FIELDS[field_name]: field_value
         for field_name, field_value
         in model_fields.items()
     }
@@ -60,12 +60,12 @@ def format_search_filter(model_fields):
     ldap_fields = convert_model_fields_to_ldap_fields(model_fields)
     # ldap_fields: {'sAMAccountName': 'provided_value'}
 
-    ldap_fields["objectClass"] = settings.LDAP_USER_OBJECT_CLASS
+    ldap_fields["objectClass"] = settings.LDAP_AUTH_USER_OBJECT_CLASS
     # ldap_fields: {'sAMAccountName': 'login_value', 'objectClass': 'person'}
 
-    # LDAP_FORMAT_SEARCH_FILTERS is by default format_search_filters()
+    # LDAP_AUTH_FORMAT_SEARCH_FILTERS is by default format_search_filters()
     search_filters = import_func(
-        settings.LDAP_FORMAT_SEARCH_FILTERS)(ldap_fields)
+        settings.LDAP_AUTH_FORMAT_SEARCH_FILTERS)(ldap_fields)
     # search_filters: [(sAMAccountName=provided_value), (objectClass=person)]
 
     # return: (&(sAMAccountName=provided_value)(objectClass=person))
