@@ -29,7 +29,7 @@ Installation
 ##### New functionality
 
 - DN Format:  
-  - Some LDAP servers might require DN in format `CN=Name Lastname,OU=people,DC=example,DC=com`.
+  - Some LDAP servers might require DN in format `CN=Name Surname,OU=people,DC=example,DC=com`.
 For such LDAP configuration `django-python3-ldap` fails to authenticate user if 
 username is provided instead of full name.
   - With `django-py3-ldap`, it does not matter what DN format the LDAP server is using. 
