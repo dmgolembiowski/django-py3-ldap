@@ -21,6 +21,10 @@ Stick to the original unless you find yourself in similar situation as described
 Installation
 ------------
 1. Install using `pipenv install -e git+https://github.com/sonicblind/django-py3-ldap.git#egg=django-py3-ldap`.
+  or using `pip` via: `pip install -e git+https://github.com/dmgolembiowski/django-py3-ldap.git#egg=django-py3-ldap`. 
+  Note, it is possible to chain multiple `--trusted-host` arguments if you are behind a corporate firewall -- i.e.
+  the kind of corporate environment that uses LDAP, for example.
+  In these cases, we can run: `pip install --trusted-host github.com --trusted-host pypi.org --trusted-host files.pythonhosted.org ...`.
 2. Add `'django_py3_ldap'` to your `INSTALLED_APPS` setting.
 3. Set (or add) your `AUTHENTICATION_BACKENDS` setting to `("django_py3_ldap.auth.LDAPBackend",)`
 4. Configure the settings for your LDAP server (see Available settings, below).
