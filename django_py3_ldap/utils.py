@@ -2,7 +2,10 @@ import re
 import binascii
 from django.utils.encoding import force_text
 from django.utils.module_loading import import_string
-from django.utils import six
+try:
+    from django.utils import six
+except:
+    import six
 
 from django_py3_ldap.conf import settings
 
